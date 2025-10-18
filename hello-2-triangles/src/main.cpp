@@ -13,12 +13,12 @@ void processInput(GLFWwindow* window) {
         glfwSetWindowShouldClose(window, true);
 }
 
-float linearToLog(float input, float base = 10.0f) {
-    if (input <= 0.0f) return 0.0f;
-    if (input >= 1.0f) return 1.0f;
+// float linearToLog(float input, float base = 10.0f) {
+//     if (input <= 0.0f) return 0.0f;
+//     if (input >= 1.0f) return 1.0f;
 
-    return ((std::pow(base, input) - 1.0f) / (base - 1.0f));
-}
+//     return ((std::pow(base, input) - 1.0f) / (base - 1.0f));
+// }
 
 const char* fragmentShaderSource = R"glsl(
     #version 330 core
@@ -127,9 +127,14 @@ int main() {
 
         glUseProgram(shaderProgram);
 
-        float logTime = linearToLog(std::fmod(glfwGetTime(), 1.0f));
-        glUniform1f(timeValue, logTime);
-        std::cout << logTime << '\n';
+        // float logTime = linearToLog(std::fmod(glfwGetTime(), 1.0f));
+        
+        float time = glfwGetTime();
+        float speed = 0.5f;
+        float sineTime = 0.5f * (std::sin(time * 2.0f * M_PI * speed) + 1.0f);
+
+        glUniform1f(timeValue, sineTime);
+        std::cout << sineTime << '\n';
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
