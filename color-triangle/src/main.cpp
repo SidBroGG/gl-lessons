@@ -2,7 +2,6 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <cmath>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -15,12 +14,10 @@ void processInput(GLFWwindow* window) {
 
 const char* fragmentShaderSource = R"glsl(
     #version 330 core
-
     out vec4 FragColor;
-    uniform float time;
 
     void main() {
-        FragColor = vec4(time, 0.0f, 0.0f, 1.0f);
+        FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
     }
 )glsl";
 
@@ -84,15 +81,11 @@ int main() {
     glDeleteShader(fragmentShader);
     glDeleteShader(vertexShader);
 
-    // 2 Triangles vertices
+    // Triangle vertices
     float vertices[] = {
-         0.1f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.3f,  0.5f, 0.0f,
-
-        -0.1f, -0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
-        -0.3f,  0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+         0.0f,  0.5f, 0.0f
     };
 
     unsigned int VBO, VAO; 
@@ -108,28 +101,16 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
-    int timeValue = glGetUniformLocation(shaderProgram, "time");
-
     // Render loop
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
         
-        glClearColor(0.0745f, 0.3098f, 0.1451f, 1.0f);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-
-        float time = glfwGetTime();
-        float speed = 0.5f;
-        float sineTime = 0.5f * (std::sin(time * 2.0f * M_PI * speed) + 1.0f);
-
-        glUniform1f(timeValue, sineTime);
-        std::cout << sineTime << '\n';
-
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawArrays(GL_TRIANGLES, 3, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
